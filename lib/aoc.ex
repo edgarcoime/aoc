@@ -1,18 +1,5 @@
 defmodule Aoc do
-  @moduledoc """
-  Documentation for `Aoc`.
-  """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Aoc.hello()
-      :world
-
-  """
-  def hello do
-    :world
+  def hello_world do
+    "Hello, World!!"
   end
 end
