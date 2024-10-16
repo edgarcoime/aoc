@@ -46,10 +46,14 @@ defmodule Day1 do
   def read_file_by_line(filename) do
     path = Path.join(:code.priv_dir(:aoc), filename)
 
-    path
-    |> File.stream!()
-    |> Enum.map(&process_line/1)
-    |> Enum.reduce(0, &(&1 + &2))
+    try do
+      path
+      |> File.stream!()
+      |> Enum.map(&process_line/1)
+      |> Enum.reduce(0, &(&1 + &2))
+    rescue
+      error -> IO.puts("Error reading file: #{inspect(error)}")
+    end
   end
 end
 
