@@ -1,4 +1,4 @@
-defmodule Day1 do
+defmodule Day1p1 do
   def read_file(filename) do
     path = Path.join(:code.priv_dir(:aoc), filename)
 
