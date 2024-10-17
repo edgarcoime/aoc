@@ -1,4 +1,20 @@
 defmodule Day1p1 do
+  def albert(filename) do
+    path = Path.join(:code.priv_dir(:aoc), filename)
+
+    {:ok, content} = File.read(path)
+
+    content
+    |> String.split()
+    |> Enum.map(fn s -> Regex.scan(~r/\d/, s) |> Enum.concat() end)
+    # filter out lines with no digits
+    |> Enum.filter(&(length(&1) != 0))
+    |> Enum.map(fn l ->
+      String.to_integer(hd(l) <> hd(Enum.reverse(l)))
+    end)
+    |> Enum.sum()
+  end
+
   def read_file(filename) do
     path = Path.join(:code.priv_dir(:aoc), filename)
 
