@@ -22,7 +22,7 @@ defmodule Day2p1 do
     |> String.split(", ", trim: true)
     |> Enum.map(fn part ->
       [num, color] = String.split(part, " ")
-      {color, String.to_integer(num)}
+      {String.to_atom(color), String.to_integer(num)}
     end)
     |> Enum.into(%{})
   end
@@ -37,9 +37,27 @@ defmodule Day2p1 do
 
   # === PROCESS DATASET ===
   def process_game_set(game, target) do
-    # True or False
-    IO.puts("Game: #{inspect(game)}")
-    [game[:num], true]
+    valid =
+      game[:games]
+      |> Enum.map(fn set ->
+        # Iterate through all targets
+        target
+        |> Enum.map(fn {k, v} ->
+          set_count = Map.get(set, k, 0)
+          target_count = v
+
+          if set_count <= target_count do
+            true
+          else
+            false
+          end
+        end)
+        |> Enum.all?(fn valid -> valid == true end)
+      end)
+      |> Enum.all?(fn valid -> valid == true end)
+
+    res = {game[:num], valid}
+    res
   end
 
   # === PROCESS DATASET ===
@@ -58,11 +76,8 @@ defmodule Day2p1 do
 
     dataset
     |> Enum.map(&process_game_set(&1, target))
-    |> Enum.reduce(0, fn game, acc ->
-      case game do
-        [n, true] -> acc + n
-        _ -> acc
-      end
-    end)
+    |> Enum.filter(fn {_, valid} -> valid == true end)
+    # |> Enum.each(fn v -> IO.puts("Valid: #{inspect(v)}") end)
+    |> Enum.reduce(0, fn {num, _}, acc -> acc + num end)
   end
 end
