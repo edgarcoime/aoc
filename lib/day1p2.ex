@@ -11,7 +11,7 @@ defmodule Day1p2 do
     "nine" => 9
   }
 
-  @spec is_named_int(String.t()) :: {string, integer} | nil
+  @spec is_named_int(String.t()) :: {String.t(), integer} | nil
   def is_named_int(str) do
     case Enum.find(@number_map, nil, fn {k, _} -> String.starts_with?(str, k) end) do
       nil -> nil
