@@ -13,10 +13,7 @@ defmodule Day1p2 do
 
   @spec is_named_int(String.t()) :: {String.t(), integer} | nil
   def is_named_int(str) do
-    case Enum.find(@number_map, nil, fn {k, _} -> String.starts_with?(str, k) end) do
-      nil -> nil
-      {k, v} -> {k, v}
-    end
+    Enum.find(@number_map, nil, fn {k, _} -> String.starts_with?(str, k) end)
   end
 
   @spec index_substring(String.t(), String.t()) :: integer | nil
