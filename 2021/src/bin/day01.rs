@@ -31,7 +31,7 @@ fn part2(input: &str) -> i32 {
         .windows(3)
         .map(|win| win
             .iter()
-            .fold(0, |acc, el| el + acc)
+            .sum()
         )
         .collect::<Vec<i32>>()
         .windows(2)
@@ -49,15 +49,36 @@ fn part2(input: &str) -> i32 {
         })
 }
 
+fn part2_win4(input: &str) -> i32 {
+    let nums = parse(&input);
+    nums
+        .windows(4)
+        .fold(0, |acc, win| {
+            match win {
+                [a, _, _, d] => {
+                    if a < d {
+                        acc + 1
+                    } else {
+                        acc
+                    }
+                }
+                _ => panic!("unexpected window size")
+            }
+        })
+}
+
+
 fn main() {
     let input1 = read_input("inputs/day01_p1.txt");
     let input2 = read_input("inputs/day01_p1.txt");
 
     let p1 = part1(&input1);
     let p2 = part2(&input2);
+    let p2v2 = part2_win4(&input2);
 
     println!("part 1: {}", p1);
     println!("part 2: {}", p2);
+    println!("part 2 ver.2: {}", p2v2);
 }
 
 #[cfg(test)]
