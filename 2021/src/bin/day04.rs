@@ -149,16 +149,20 @@ fn part2(input: &str) -> Option<i64> {
 
     for draw in &draws {
         for (idx, board) in boards.iter_mut().enumerate() {
+            if completed[idx] {
+                continue; // already won, don't mark or count again
+            }
             let hit = board.mark(*draw);
 
             if hit {
                 println!("board {idx} hit with draw {draw}");
-                completed_count += 1;
                 completed[idx] = true;
+                completed_count += 1;
 
                 if completed_count >= total_boards {
                     let unmarked_sum = board.calculate_unmarked_sum();
                     let ans = *draw as i64 * unmarked_sum as i64;
+                    println!("completed count: {completed_count}, total boards: {total_boards}");
                     println!("{:?} {:?}", draw, board);
                     println!("unmarked sum: {unmarked_sum}, ans: {ans}");
                     return Some(ans);
@@ -175,8 +179,8 @@ fn main() {
     // let p1 = part1(&input1);
     // println!("{p1:?}");
 
-    // let input2 = read_input("inputs/day04.txt");
-    let input2 = read_input("examples/day04.txt");
+    let input2 = read_input("inputs/day04.txt");
+    // let input2 = read_input("examples/day04.txt");
     let p2 = part2(&input2);
     println!("{p2:?}");
 }
