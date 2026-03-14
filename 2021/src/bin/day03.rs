@@ -1,4 +1,4 @@
-use aoc::read_input;
+use aoc::{bits_to_num, read_input};
 
 #[derive(Debug)]
 struct Acc {
@@ -15,39 +15,35 @@ impl Acc {
     }
 }
 
-fn convert_bits_to_num(bits: &[u8]) -> i64 {
-    let value = bits.iter().fold(0u32, |acc, &b| (acc << 1) | b as u32);
-    value as i64
-}
+fn part1(input: &str) -> i32 {
+    let mut lines = input.lines();
+    let first = lines.next().unwrap();
+    let width = first.len();
 
-fn part1(input: &str) -> i64 {
-    // Feels hacky
-    let width = input.lines().next().unwrap().len();
-
-    let res = input.lines().fold(
+    let res = std::iter::once(first).chain(lines).fold(
         Acc::new(width),
         |mut acc, line| {
             acc.total += 1;
-            for (i, c) in line.chars().enumerate() {
-                if c == '1' {
-                    acc.bits[i] += 1
+            for (i, b) in line.bytes().enumerate() {
+                if b == b'1' {
+                    acc.bits[i] += 1;
                 }
             }
             acc
-        }
-
+        },
     );
 
-    // Create final bit map
-    let final_bits = res
-        .bits
-        .iter()
-        .map(|count| if count * 2 <= res.total { 0 } else { 1 })
-        .collect::<Vec<u8>>();
+    let gamma = bits_to_num(
+        res.bits
+            .iter()
+            .map(|&count| if count * 2 > res.total { 1 } else { 0 }),
+    );
 
-    // Calculate
-    let gamma = convert_bits_to_num(&final_bits);
-    let epsilon = convert_bits_to_num(&final_bits.iter().map(|b| b ^ 1).collect::<Vec<u8>>());
+    let epsilon = bits_to_num(
+        res.bits
+            .iter()
+            .map(|&count| if count * 2 > res.total { 0 } else { 1 }),
+    );
 
     println!("Gamma: {}, Epsilon: {}", gamma, epsilon);
     gamma * epsilon
