@@ -2,19 +2,8 @@ use aoc::{bits_to_num, read_input};
 
 #[derive(Debug, Clone)]
 struct Acc {
-    total: i32,
-    bits: Vec<i32>,
-    width: usize,
-}
-
-impl Acc {
-    fn new(size: usize) -> Self {
-        Self {
-            total: 0,
-            bits: vec![0; size],
-            width: size,
-        }
-    }
+    total: usize,
+    bits: Vec<usize>,
 }
 
 fn get_one_counts(input: &str) -> Acc {
@@ -22,17 +11,19 @@ fn get_one_counts(input: &str) -> Acc {
     let first = lines.next().unwrap();
     let width = first.len();
 
-    std::iter::once(first)
-        .chain(lines)
-        .fold(Acc::new(width), |mut acc, line| {
-            acc.total += 1;
-            for (i, b) in line.bytes().enumerate() {
-                if b == b'1' {
-                    acc.bits[i] += 1;
-                }
+    let mut total = 0usize;
+    let mut bits = vec![0usize; width];
+
+    for line in std::iter::once(first).chain(lines) {
+        total += 1;
+        for (i, b) in line.bytes().enumerate() {
+            if b == b'1' {
+                bits[i] += 1;
             }
-            acc
-        })
+        }
+    }
+
+    Acc { total, bits }
 }
 
 fn part1(input: &str) -> i32 {
@@ -81,7 +72,8 @@ where
         // count ones in this column
         let ones = candidates
             .iter()
-            .filter(|entry| entry.chars().nth(idx).unwrap() == '1')
+            // Can instead use as_bytes since nth walks through the string every time
+            .filter(|entry| entry.as_bytes()[idx] == b'1')
             .count();
 
         candidates = reduce_candidates(candidates, idx, |c| pred(ones, total, idx, c));
