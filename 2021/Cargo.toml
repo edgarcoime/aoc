@@ -9,5 +9,5 @@ edition = "2024"
 criterion = { version = "0.8", features = ["html_reports"] }
 
 [[bench]]
-name = "day01"
+name = "aoc"
 harness = false
